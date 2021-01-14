@@ -7,6 +7,7 @@ package proyectofinaloracle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,7 +28,7 @@ public class UIUsuarios extends javax.swing.JFrame {
     /**
      * Creates new form Usuarios
      */
-    Consultas query ;
+    Consultas query;
     Jtable tabla = new Jtable();
     ArrayList<RolesObj> listRoles = new ArrayList<>(); //Lista de Roles que se van a agregar o editar
     ArrayList<PrivObj> listPrivs = new ArrayList<>(); //Lista de Roles que se van a agregar o editar
@@ -40,13 +41,37 @@ public class UIUsuarios extends javax.swing.JFrame {
         initComponents();
 
         this.setLocationRelativeTo(null);
-        if (accion.equals("editar")) {//Cuando se actualiza un usuario
-            txtUsuario.setText(nomUsuario);
-            tabla.visualizarEditar(jTblRoles, "Roles", txtUsuario.getText());
-            tabla.visualizarEditar(jTablePriv, "Privilegios", txtUsuario.getText());
-        } else {//Cuando se crea un nuevo usuario
-            tabla.visualizar(jTblRoles, "Roles");
-            tabla.visualizar(jTablePriv, "Privilegios");
+        editarCrearUsuarios();
+//        cargarTablespace();
+    }
+
+//    public void cargarTablespace() {
+//
+//        try {
+//            query = new Consultas();
+//            for (String string : query.obtenerTablesapace()) {
+//                jcbxTablespace.addItem(string);
+//
+//            }
+//            jcbxTablespace.setSelectedIndex(-1);
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex, "SQL", JOptionPane.INFORMATION_MESSAGE);
+//        }
+//
+//    }
+
+    public void editarCrearUsuarios() {
+        try {
+            if (accion.equals("editar")) {//Cuando se actualiza un usuario
+                txtUsuario.setText(nomUsuario);
+                tabla.visualizarEditar(jTblRoles, "Roles", txtUsuario.getText());
+                tabla.visualizarEditar(jTablePriv, "Privilegios", txtUsuario.getText());
+            } else {//Cuando se crea un nuevo usuario
+                tabla.visualizar(jTblRoles, "Roles");
+                tabla.visualizar(jTablePriv, "Privilegios");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
         }
 
     }
@@ -140,7 +165,7 @@ public class UIUsuarios extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtRepitaCon, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45))
+                .addGap(16, 16, 16))
         );
 
         BtnCrear.setText("Crear");
@@ -165,16 +190,17 @@ public class UIUsuarios extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(127, 127, 127)
-                        .addComponent(BtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(39, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(BtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(172, 172, 172))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,11 +209,11 @@ public class UIUsuarios extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(58, 58, 58))
         );
 
         jTabbedPane1.addTab("Usuarios", jPanel3);
@@ -317,13 +343,14 @@ public class UIUsuarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCrearActionPerformed
-       String usuario = txtUsuario.getText();
+        String usuario = txtUsuario.getText();
         query = new Consultas();
         try {
             if (BtnCrear.getText().equals("Crear")) { //Crear Usuario
                 JOptionPane.showMessageDialog(null, "Usuario Creado", "SQL", JOptionPane.INFORMATION_MESSAGE);
-
                 String contrasenia = txtContra.getText();
+               
+
                 if (query.crearUsuario(usuario, contrasenia)) {
                     if (listRoles.size() != 0) {
                         int rs = query.crearEditarRolesxUsuario(listRoles, usuario);
@@ -367,11 +394,24 @@ public class UIUsuarios extends javax.swing.JFrame {
             listRoles.clear();
             if (accion.equals("editar")) {//Cuando se actualiza un usuario
                 txtUsuario.setText(nomUsuario);
-                tabla.visualizarEditar(jTblRoles, "Roles", txtUsuario.getText());
-                tabla.visualizarEditar(jTablePriv, "Privilegios", txtUsuario.getText());
-            } else {//Cuando se crea un nuevo usuario
-                tabla.visualizar(jTblRoles, "Roles");
-                tabla.visualizar(jTablePriv, "Privilegios");
+                try {
+                    tabla.visualizarEditar(jTblRoles, "Roles", txtUsuario.getText());
+                } catch (SQLException ex1) {
+                    Logger.getLogger(UIUsuarios.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+                try {
+                    tabla.visualizarEditar(jTablePriv, "Privilegios", txtUsuario.getText());
+                } catch (SQLException ex1) {
+                    Logger.getLogger(UIUsuarios.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            } else {
+                try {
+                    //Cuando se crea un nuevo usuario
+                    tabla.visualizar(jTblRoles, "Roles");
+                    tabla.visualizar(jTablePriv, "Privilegios");
+                } catch (SQLException ex1) {
+                    Logger.getLogger(UIUsuarios.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(UIUsuarios.class.getName()).log(Level.SEVERE, null, ex);

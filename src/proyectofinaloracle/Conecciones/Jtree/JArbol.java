@@ -13,12 +13,9 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTree;
-import javax.swing.text.TabableView;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import proyectofinaloracle.Conecciones.ConeccionesModel;
 import proyectofinaloracle.Conecciones.Consultas;
@@ -35,7 +32,6 @@ public class JArbol extends DefaultTreeCellRenderer {
 
     private final ImageIcon iconbdd;
     private final ImageIcon icontablas;
-    private final ImageIcon iconcolumnas;
     private final ImageIcon connection;
     private final ImageIcon folder;
         private final ImageIcon user;
@@ -45,7 +41,6 @@ public class JArbol extends DefaultTreeCellRenderer {
     public JArbol() {
         iconbdd = new ImageIcon("src\\imgs\\db.png");
         icontablas = new ImageIcon("src\\imgs\\table.png");
-        iconcolumnas = new ImageIcon("src\\imgs\\columns.png");
         connection = new ImageIcon("src\\imgs\\connect.png");
         folder = new ImageIcon("src\\imgs\\folder.png");
         user=new ImageIcon("src\\imgs\\user.png");
@@ -72,7 +67,7 @@ public class JArbol extends DefaultTreeCellRenderer {
         return modelo;
     }
 
-    public DefaultTreeModel crearNodosxNombre(Oracle obj) throws SQLException, ClassNotFoundException  {
+    public DefaultTreeModel crearNodosxNombre(Oracle obj) throws SQLException, ClassNotFoundException, Exception  {
          clear();
         List<Oracle> conexiones = mc.obtenerConecciones();
         try {
@@ -84,8 +79,7 @@ public class JArbol extends DefaultTreeCellRenderer {
 
                 if (con.nombreConn.equals(obj.nombreConn)) {
                     tablas = query.obtenerTablas(obj);
-                    usuarios = query.obtenerUsuarios(obj);
-
+                    usuarios = query.obtenerUsuariosSytem();
                     ArrayList<TablaModel> tablaList = new ArrayList();
                     ArrayList<UsuariosModel> usuariosList = new ArrayList();
 

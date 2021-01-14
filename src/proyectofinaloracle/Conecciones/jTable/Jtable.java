@@ -5,6 +5,7 @@
  */
 package proyectofinaloracle.Conecciones.jTable;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -19,54 +20,57 @@ public class Jtable {
 
     private final boolean[] editable = {false, true};
 
-    Consultas query= new Consultas();
-;
+    Consultas query = new Consultas();
+    ;
 
     ManejarArchivos files = new ManejarArchivos();
     ArrayList<String> listaRoles = new ArrayList<String>();
     ArrayList<String> listaPrivilegios = new ArrayList<String>();
 
-    public void visualizar(JTable tabla, String Opcion) {
-        tabla.setDefaultRenderer(Object.class, new RenderTable());
+    public void visualizar(JTable tabla, String Opcion) throws SQLException {
+            tabla.setDefaultRenderer(Object.class, new RenderTable());
 
-        DefaultTableModel dt = new DefaultTableModel(new String[]{Opcion, "Opciones"}, 0) {
+            DefaultTableModel dt = new DefaultTableModel(new String[]{Opcion, "Opciones"}, 0) {
 
-            Class[] types = new Class[]{
-                java.lang.Object.class, java.lang.Boolean.class
+                Class[] types = new Class[]{
+                    java.lang.Object.class, java.lang.Boolean.class
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int row, int column) {
+                    return editable[column];
+                }
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+            if (Opcion.equals("Roles")) {
+                Object fila[] = new Object[2];
+                for (String role : query.obtenerTodosRoles()) {
+                    fila[0] = role;
+                    fila[1] = false;
+                    dt.addRow(fila);
+                }
+
+            } else if (Opcion.equals("Privilegios")) {
+                Object fila[] = new Object[2];
+                for (String priv : query.obtenerTodosPrivilegios()) {
+                    fila[0] = priv;
+                    fila[1] = false;
+                    dt.addRow(fila);
+                }
             }
 
-            public boolean isCellEditable(int row, int column) {
-                return editable[column];
-            }
-        };
-
-        if (Opcion.equals("Roles")) {
-            Object fila[] = new Object[2];
-            for (String role : query.obtenerTodosRoles()) {
-                fila[0] = role;
-                fila[1] = false;
-                dt.addRow(fila);
-            }
-
-        } else if (Opcion.equals("Privilegios")) {
-            Object fila[] = new Object[2];
-            for (String priv : query.obtenerTodosPrivilegios()) {
-                fila[0] = priv;
-                fila[1] = false;
-                dt.addRow(fila);
-            }
-        }
-
-        tabla.setModel(dt);
+            tabla.setModel(dt);
+       
 
     }
 
-    public void visualizarEditar(JTable tabla, String Opcion, String user) {
-        tabla.setDefaultRenderer(Object.class, new RenderTable());
+    public void visualizarEditar(JTable tabla, String Opcion, String user) throws SQLException {
+        
+        try {
+            tabla.setDefaultRenderer(Object.class, new RenderTable());
         DefaultTableModel dt = new DefaultTableModel(new String[]{Opcion, "Opciones"}, 0) {
 
             Class[] types = new Class[]{
@@ -110,6 +114,10 @@ public class Jtable {
         }
 
         tabla.setModel(dt);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
 
     }
 

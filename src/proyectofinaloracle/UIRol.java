@@ -7,6 +7,8 @@ package proyectofinaloracle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import proyectofinaloracle.Conecciones.Conexion;
@@ -34,11 +36,19 @@ public class UIRol extends javax.swing.JFrame {
     }
 
     public void cargarRolesJlist() {
-        DefaultListModel modelo = new DefaultListModel();
-        for (String object : query.obtenerTodosRoles()) {
-            modelo.addElement(object);
+        try {
+            DefaultListModel modelo = new DefaultListModel();
+            for (String object : query.obtenerTodosRoles()) {
+                modelo.addElement(object);
+            }
+            jListRoles.setModel(modelo);
+        } catch (SQLException e) {
+            btnActualizarJlist.setEnabled(false);
+            btnCancelar.setEnabled(false);
+            btnGuardar.setEnabled(false);
+            btnNuevo.setEnabled(false);
         }
-        jListRoles.setModel(modelo);
+
     }
 
     /**
@@ -276,10 +286,14 @@ public class UIRol extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
 
-        deshabilitarJlist();
-        table.visualizar(jTablePrivs, "Privilegios");
-
-        // TODO add your handling code here:
+        try {
+            deshabilitarJlist();
+            table.visualizar(jTablePrivs, "Privilegios");
+            
+            // TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(UIRol.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnActualizarJlistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarJlistActionPerformed

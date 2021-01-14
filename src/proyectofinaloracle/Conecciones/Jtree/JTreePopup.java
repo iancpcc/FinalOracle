@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import proyectofinaloracle.Conecciones.Conexion;
 import proyectofinaloracle.Conecciones.Consultas;
 import proyectofinaloracle.UIGestor;
@@ -28,7 +29,7 @@ public class JTreePopup extends JPopupMenu {
         JMenuItem menuItemUpdate = new JMenuItem("Editar usuario");
         JMenuItem menuItemDelete = new JMenuItem("Eliminar usuario");
         JMenuItem menuItemRol = new JMenuItem("Crear Roles");
-       
+
         add(menuItemUpdate);
         addSeparator();
         add(menuItemAdd);
@@ -51,9 +52,11 @@ public class JTreePopup extends JPopupMenu {
                 UIUsuarios.txtUsuario.setEnabled(false);
                 UIUsuarios.BtnCrear.setText("Actualizar");
                 uiUser.setVisible(true);
+//                uiUser.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
             }
         });
-        
+
         menuItemRol.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 UIRol rol = new UIRol();

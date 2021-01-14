@@ -25,19 +25,18 @@ public class Consultas {
 //    public Consultas() {
 //        con = cnn.connecion();
 //    }
-
     public Connection retornarConeccion() {
         return cnn.connecion();
     }
 
-    public List<String> obtenerTablas(Oracle obj) throws SQLException, ClassNotFoundException {
+    public List<String> obtenerTablas(Oracle obj) throws SQLException {
         List<String> listaTables = new ArrayList<String>();
 
         try {
             con = cnn.obtenerConecciones(obj.host, obj.puerto, obj.SID, obj.usuario, obj.contrasenia);
-            PreparedStatement st = con.prepareStatement("SELECT TABLE_NAME FROM ALL_TABLES WHERE OWNER =?");
-            //Envio los usuarios para obtener las tablas
-            st.setString(1, obj.usuario);
+            PreparedStatement st = con.prepareStatement("SELECT TABLE_NAME FROM USER_TABLES");
+//            //Envio los usuarios para obtener las tablas
+//            st.setString(1, obj.usuario);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -46,7 +45,25 @@ public class Consultas {
             con.close();
             return listaTables;
         } catch (SQLException ex) {
+            throw ex;
+        }
 
+    }
+
+    public List<String> obtenerTablesapace() throws SQLException {
+        List<String> listaTablespaces = new ArrayList<String>();
+
+        try {
+            con = retornarConeccion();
+            PreparedStatement st = con.prepareStatement("SELECT tablespace_name FROM user_tablespaces WHERE tablespace_name <> ?");
+            st.setString(1, "TEMP");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                listaTablespaces.add(rs.getString("tablespace_name"));
+            }
+            con.close();
+            return listaTablespaces;
+        } catch (SQLException ex) {
             throw ex;
         }
 
@@ -54,7 +71,6 @@ public class Consultas {
 
     public List<String> obtenerUsuarios(Oracle obj) throws SQLException, ClassNotFoundException {
         List<String> listaUsuarios = new ArrayList<String>();
-
         try {
             con = cnn.obtenerConecciones(obj.host, obj.puerto, obj.SID, obj.usuario, obj.contrasenia);
             PreparedStatement st = con.prepareStatement("SELECT USERNAME FROM DBA_USERS WHERE USERNAME <> ?");
@@ -65,7 +81,7 @@ public class Consultas {
             while (rs.next()) {
                 listaUsuarios.add(rs.getString("USERNAME"));
             }
-//            con.close();
+            con.close();
             return listaUsuarios;
         } catch (SQLException ex) {
             throw ex;
@@ -73,7 +89,29 @@ public class Consultas {
 
     }
 
-    public ArrayList<String> obtenerRolesxUsuario(String user) {
+    public List<String> obtenerUsuariosSytem() throws SQLException, ClassNotFoundException {
+        List<String> listaUsuarios = new ArrayList<String>();
+        Oracle obj = new Oracle("SYSTEM", "DESKTOP-T9885UU", "1521", "ORCL", "1804898755.Ian", "SYSTEM");
+        String usuario = Conexion.or.usuario;
+        try {
+            con = cnn.obtenerConecciones(obj.host, obj.puerto, obj.SID, obj.usuario, obj.contrasenia);
+            PreparedStatement st = con.prepareStatement("SELECT USERNAME FROM DBA_USERS WHERE USERNAME <> ? ORDER BY USERNAME ASC");
+            //Envio los usuarios para obtener las tablas
+            st.setString(1, usuario);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                listaUsuarios.add(rs.getString("USERNAME"));
+            }
+            con.close();
+            return listaUsuarios;
+        } catch (SQLException ex) {
+            throw ex;
+        }
+
+    }
+
+    public ArrayList<String> obtenerRolesxUsuario(String user) throws SQLException {
         ArrayList<String> listaRoles = new ArrayList<String>();
         try {
             con = retornarConeccion();
@@ -87,13 +125,12 @@ public class Consultas {
 
             return listaRoles;
 
-        } catch (Exception e) {
-            System.out.println("entro al catch obRlUs");
+        } catch (SQLException ex) {
+            throw ex;
         }
-        return listaRoles;
     }
 
-    public ArrayList<String> obtenerTodosRoles() {
+    public ArrayList<String> obtenerTodosRoles() throws SQLException {
         ArrayList<String> listaRoles = new ArrayList<String>();
         try {
             con = retornarConeccion();
@@ -107,16 +144,15 @@ public class Consultas {
             return listaRoles;
 
         } catch (SQLException e) {
-            System.out.println(e.toString());
+            throw e;
         }
-        return listaRoles;
     }
 
     public ArrayList<String> obtenerPrivilegiosxRoles(String rol) {
         ArrayList<String> listaPriv = new ArrayList<String>();
 
         try {
-                        con = retornarConeccion();
+            con = retornarConeccion();
 
             PreparedStatement st = con.prepareStatement("select privilege from dba_sys_privs where grantee = ?");
             st.setString(1, rol);
@@ -138,7 +174,7 @@ public class Consultas {
         PreparedStatement st;
         int rs = -1;
         try {
-            con=retornarConeccion();
+            con = retornarConeccion();
             st = con.prepareStatement("CREATE ROLE " + rol + "");
             rs = st.executeUpdate();
             if (rs == 0) {
@@ -153,7 +189,7 @@ public class Consultas {
     public int asignarPrivilegiosaRoles(ArrayList<PrivObj> lista, String rol) throws SQLException {
         String sentencia = "";
         int rs = -1;
-        con=retornarConeccion();
+        con = retornarConeccion();
         try {
             for (PrivObj priv : lista) {
                 if (priv.valor) {
@@ -174,7 +210,7 @@ public class Consultas {
     public int actualizarPrivilegiosaRoles(ArrayList<PrivObj> lista, String rol) throws SQLException {
         String sentencia = "";
         int rs = -1;
-        con=retornarConeccion();
+        con = retornarConeccion();
         try {
             for (PrivObj priv : lista) {
                 if (priv.valor) {
@@ -195,7 +231,7 @@ public class Consultas {
     }
     //select privilege from dba_sys_privs where grantee = 'RESOURCE'
 
-    public ArrayList<String> obtenerPrivilegiosxUsuario(String user) {
+    public ArrayList<String> obtenerPrivilegiosxUsuario(String user) throws SQLException {
         ArrayList<String> listapriv = new ArrayList<String>();
         try {
             con = retornarConeccion();
@@ -210,10 +246,8 @@ public class Consultas {
             return listapriv;
 
         } catch (SQLException ex) {
-
-            JOptionPane.showMessageDialog(null, ex, "SQL", JOptionPane.INFORMATION_MESSAGE);
+            throw ex;
         }
-        return listapriv;
     }
 
     public ArrayList<String> obtenerTodosPrivilegios() {
@@ -238,20 +272,41 @@ public class Consultas {
 
     public boolean crearUsuario(String user, String pass) throws SQLException {
         try {
-            con=retornarConeccion();
+            con = retornarConeccion();
             PreparedStatement st = con.prepareStatement("CREATE USER " + user + " IDENTIFIED BY " + pass + "");
             ResultSet rs = st.executeQuery();
             con.close();
             return true;
 
         } catch (SQLException ex) {
+            System.out.println(ex);
             throw ex;
         }
 
     }
+// CREATE USER ELVIS IDENTIFIED BY 1234 DEFAULT TABLESPACE ACADEMO;
+
+    public boolean crearUsuarioTablespace(String user, String pass, String tablespace) throws SQLException {
+        try {
+            con = retornarConeccion();
+            int rs = -1;
+            PreparedStatement st = con.prepareStatement("CREATE USER " + user + " IDENTIFIED BY " + pass + " DEFAULT TABLESPACE " + tablespace + "");
+             rs = st.executeUpdate();
+            if (rs >=0) {
+                 return true;   
+            }
+            con.close();
+            return false;
+
+        } catch (SQLException ex) {
+            throw ex;
+        }
+
+    }
+
     public boolean actualizarUsuario(String user, String pass) throws SQLException {
         try {
-            con=retornarConeccion();
+            con = retornarConeccion();
             PreparedStatement st = con.prepareStatement("ALTER USER " + user + " IDENTIFIED BY " + pass + "");
             ResultSet rs = st.executeQuery();
             con.close();
@@ -310,7 +365,7 @@ public class Consultas {
 
     public int eliminarUsuario(String user) throws SQLException {
         try {
-            con =retornarConeccion();
+            con = retornarConeccion();
             int rs = -1;
             PreparedStatement st = con.prepareStatement("DROP USER " + user + "");
             rs = st.executeUpdate();
