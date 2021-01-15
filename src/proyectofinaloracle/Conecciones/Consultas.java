@@ -376,4 +376,21 @@ public class Consultas {
             throw ex;
         }
     }
+    
+    public int crearCarpetaBackup(String ruta,String carpeta) throws SQLException{
+         try {
+            con = retornarConeccion();
+            int rs = -1;
+            String comando= "CREATE OR REPLACE DIRECTORY "+carpeta+"_EXPORT AS '"+ruta+"'";
+            PreparedStatement st = con.prepareStatement(comando);
+            rs = st.executeUpdate();
+            con.close();
+            return rs;
+
+        } catch (SQLException ex) {
+             System.out.println("entro al catch");
+             System.out.println(ex.toString());
+            throw ex;
+        }
+    }
 }

@@ -6,9 +6,14 @@
 package proyectofinaloracle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import proyectofinaloracle.Conecciones.Conexion;
@@ -25,9 +30,10 @@ public class UIBackup extends javax.swing.JPanel {
      * Creates new form UIBackup
      */
     Consultas query = new Consultas();
-
+ Oracle obj = Conexion.or;  
     public UIBackup() {
         initComponents();
+        txtConexion.setText(obj.nombreConn);
         cargarTablas();
     }
     DefaultListModel modelo = new DefaultListModel();
@@ -35,9 +41,9 @@ public class UIBackup extends javax.swing.JPanel {
     public void cargarTablas() {
 
         try {
-            Oracle obj = Conexion.or;
+           
             for (String object : query.obtenerTablas(obj)) {
-                txtConexion.setText(obj.nombreConn);
+                
                 modelo.addElement(object);
             }
             listTablas.setModel(modelo);
@@ -56,6 +62,7 @@ public class UIBackup extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtConexion = new javax.swing.JTextField();
@@ -68,12 +75,18 @@ public class UIBackup extends javax.swing.JPanel {
         btnExportar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         listTablas = new javax.swing.JList<>();
-        jLabel4 = new javax.swing.JLabel();
+        btnExportar1 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jRbtnRuta = new javax.swing.JRadioButton();
+        jRbtnDefecto = new javax.swing.JRadioButton();
         txtArchivoBackup = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtPathFile = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtImportarArchivo = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
 
         setBackground(java.awt.Color.white);
@@ -82,6 +95,8 @@ public class UIBackup extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, null));
 
         jLabel1.setText("Conexion:");
+
+        txtConexion.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,53 +154,140 @@ public class UIBackup extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(listTablas);
 
+        btnExportar1.setText("Restaurar");
+        btnExportar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportar1ActionPerformed(evt);
+            }
+        });
+
+        jPanel4.setBackground(java.awt.Color.white);
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        buttonGroup1.add(jRbtnRuta);
+        jRbtnRuta.setText("Ruta");
+        jRbtnRuta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRbtnRutaMouseClicked(evt);
+            }
+        });
+        jRbtnRuta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRbtnRutaActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRbtnDefecto);
+        jRbtnDefecto.setSelected(true);
+        jRbtnDefecto.setText("Defecto");
+        jRbtnDefecto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRbtnDefectoActionPerformed(evt);
+            }
+        });
+
         jLabel4.setText("Nombre Archivo");
+
+        txtPathFile.setEditable(false);
+        txtPathFile.setEnabled(false);
+
+        btnBuscar.setText("Buscar");
+        btnBuscar.setEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtPathFile, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addComponent(jRbtnDefecto)
+                                .addGap(50, 50, 50)
+                                .addComponent(jRbtnRuta)))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(35, 35, 35)
+                        .addComponent(txtArchivoBackup, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(165, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtArchivoBackup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRbtnDefecto)
+                    .addComponent(jRbtnRuta))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPathFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addGap(11, 11, 11))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtArchivoBackup, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2)
+                        .addGap(96, 96, 96)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(104, Short.MAX_VALUE))
+                        .addGap(95, 95, 95)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnExportar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtArchivoBackup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(17, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExportar)
-                .addGap(45, 45, 45))
+                .addGap(15, 15, 15)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExportar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExportar1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(14, 14, 14))
         );
 
         jPanel3.setBackground(java.awt.Color.white);
@@ -194,8 +296,20 @@ public class UIBackup extends javax.swing.JPanel {
         jLabel3.setText("Tabla");
 
         jButton2.setText("Importar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        txtImportarArchivo.setEditable(false);
 
         jButton5.setText("Examinar....");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -207,7 +321,7 @@ public class UIBackup extends javax.swing.JPanel {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
+                    .addComponent(txtImportarArchivo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -218,7 +332,7 @@ public class UIBackup extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtImportarArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
@@ -242,11 +356,11 @@ public class UIBackup extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
      DefaultListModel model1 = new DefaultListModel();
@@ -281,7 +395,6 @@ public class UIBackup extends javax.swing.JPanel {
             return;
         }
 
-        String salida = null;
         ListModel<String> data = jListSelectTablas.getModel();
         String tablas = "";
         for (int i = 0; i < data.getSize(); i++) {
@@ -294,47 +407,146 @@ public class UIBackup extends javax.swing.JPanel {
         }
         try {
             Oracle orc = Conexion.or;
+            String comando = "";
+            
+            if (jRbtnDefecto.isSelected()) {
+                comando = "cmd /c expdp " + orc.usuario + "/" + orc.contrasenia + " TABLES=" + tablas + " DIRECTORY=COPIAS_EXPORT DUMPFILE=" + nameFile + ".DMP LOGFILE=" + nameFile + ".LOG";
+            } else {
+                String ruta = txtPathFile.getText();
+                int res = query.crearCarpetaBackup(ruta, nombreFolder);
+                if (res >= 0) {
+                    comando = "cmd /c expdp " + orc.usuario + "/" + orc.contrasenia + " TABLES=" + tablas + " DIRECTORY=" + nombreFolder + "_EXPORT DUMPFILE=" + nameFile + ".DMP LOGFILE=" + nameFile + ".LOG";
+                }
+            }
 
-        String comando = "cmd /c expdp " + orc.usuario + "/" + orc.contrasenia + " TABLES=" + tablas + " DIRECTORY=BACKUPS_EXPORT DUMPFILE=" + nameFile + ".DMP LOGFILE=" + nameFile + ".LOG";
-//            
             Process p = Runtime.getRuntime().exec(comando);
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = br.readLine();
-            System.out.println(line);
             while (line != null) {
                 System.out.println(line);
                 line = br.readLine();
             }
             p.waitFor();
 
-//            String comando = "cmd.exe /c start DESKTOP-T9885UU:1521 ";
-//            Process proceso = Runtime.getRuntime().exec(comando);
-//
-//            InputStreamReader entrada = new InputStreamReader(proceso.getInputStream());
-//            BufferedReader stdInput = new BufferedReader(entrada);
-//            salida = stdInput.readLine();
-//            System.out.println(salida);
-//            //Si el comando tiene una salida la mostramos
-//            if ((salida = stdInput.readLine()) != null) {
-//                System.out.println("Comando ejecutado Correctamente");
-//                while ((salida = stdInput.readLine()) != null) {
-//                    System.out.println(salida);
-//                }
-//            }
-////else {
-////                JOptionPane.showMessageDialog(this, "El backup se realizo exitosamente");
-//                //System.out.println("No se a producido ninguna salida");
-//            }
+            if (line == null) {
+                JOptionPane.showMessageDialog(null, "Backup " + nameFile + ".dmp creado exitosamente");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Backup " + nameFile + ".dmp no creado");
+
+            }
+            modelo= new DefaultListModel();
+            listTablas.setModel(modelo);
+            cargarTablas();
+
+        } catch (IOException | InterruptedException e) {
+            JOptionPane.showMessageDialog(null, e.toString(), "SQL", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString(), "SQL", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnExportarActionPerformed
+String directorio;
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        JFileChooser jf = new JFileChooser();
+        jf.showOpenDialog(this);
+        File f = jf.getSelectedFile();
+        directorio=jf.getCurrentDirectory().getName().toUpperCase().concat("_EXPORT");
+        System.out.println(directorio);
+        if (f != null) {
+            txtImportarArchivo.setText(f.getName());
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (txtImportarArchivo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Seleccione el archivo a restaurar");
+            return;
+        }
+
+        String salida = null;
+        ListModel<String> data = jListSelectTablas.getModel();
+
+        try {
+            Oracle orc = Conexion.or;
+
+            String comando = "cmd /c IMPDP " + orc.usuario + "/" + orc.contrasenia + " DIRECTORY="+directorio+" DUMPFILE=" + txtImportarArchivo.getText() + "";
+            System.out.println(comando);
+            Process p = Runtime.getRuntime().exec(comando);
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = br.readLine();
+            while (line != null) {
+                System.out.println(line);
+                line = br.readLine();
+            }
+            p.waitFor();
+
+            if (line == null) {
+                JOptionPane.showMessageDialog(null, "Backup restaurado exitosamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Fallo al restaurar el Backup");
+
+            }
+
         } catch (IOException | InterruptedException e) {
             System.out.println("Excepción: ");
             System.out.println(e.toString());
         }
 
-    }//GEN-LAST:event_btnExportarActionPerformed
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnExportar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportar1ActionPerformed
+        cargarTablas();
+        limpiarCampos();
+        
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnExportar1ActionPerformed
+    
+    public void limpiarCampos(){
+        model1 = new DefaultListModel();
+        jListSelectTablas.setModel(model1);
+        txtArchivoBackup.setText("");
+        nombreFolder="";
+        txtPathFile.setText("");
+        jRbtnDefecto.setSelected(true);
+        
+    }
+    String nombreFolder = "";
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jf.showOpenDialog(this);
+        File file = jf.getSelectedFile();
+        if (file != null) {
+            txtPathFile.setText(file.getAbsolutePath());
+            nombreFolder = file.getName();
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void jRbtnRutaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRbtnRutaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRbtnRutaMouseClicked
+
+    private void jRbtnRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRbtnRutaActionPerformed
+        btnBuscar.setEnabled(true);
+        txtPathFile.setEnabled(true);
+
+    }//GEN-LAST:event_jRbtnRutaActionPerformed
+
+    private void jRbtnDefectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRbtnDefectoActionPerformed
+        btnBuscar.setEnabled(false);
+        txtPathFile.setEnabled(false);
+    }//GEN-LAST:event_jRbtnDefectoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnExportar;
+    private javax.swing.JButton btnExportar1;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -347,11 +559,15 @@ public class UIBackup extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JRadioButton jRbtnDefecto;
+    private javax.swing.JRadioButton jRbtnRuta;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JList<String> listTablas;
     private javax.swing.JTextField txtArchivoBackup;
     private javax.swing.JTextField txtConexion;
+    private javax.swing.JTextField txtImportarArchivo;
+    private javax.swing.JTextField txtPathFile;
     // End of variables declaration//GEN-END:variables
 }
