@@ -426,6 +426,7 @@ public class UIBackup extends javax.swing.JPanel {
                 System.out.println(line);
                 line = br.readLine();
             }
+            
             p.waitFor();
 
             if (line == null) {
