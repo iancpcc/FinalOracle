@@ -461,6 +461,7 @@ String directorio;
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        //Comentario
         if (txtImportarArchivo.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Seleccione el archivo a restaurar");
             return;
